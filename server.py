@@ -1,9 +1,9 @@
 from fastapi import FastAPI
 
 
-api = FastAPI()
+app = FastAPI()
 
 
-@api.get("/")
+@app.get("/")
 async def index():
     return {"Hello": "World"}
