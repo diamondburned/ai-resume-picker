@@ -107,9 +107,12 @@ async def resume_embeddings(resume: Resume):
     )
     print(len(work_embeddings), [len(embedding) for embedding in work_embeddings])
 
-    print("For 'Amazon':")
+    company = "Amazon"
 
-    result = await search_embeddings("Amazon", work_embeddings)
+    q = f"Top work experiences for applying to '{company}':"
+    print(q)
+
+    result = await search_embeddings(q, work_embeddings)
     print(result)
 
     result = [resume.work[i] for i in result]
