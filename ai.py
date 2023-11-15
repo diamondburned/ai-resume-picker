@@ -1,5 +1,4 @@
 import os
-import dbm
 import json
 import numpy
 import numpy.linalg
@@ -7,6 +6,8 @@ import hashlib
 import base64
 import openai
 import openai.types
+import dbm.dumb as db
+from typing import MutableMapping, Generator
 from resume import *
 from dotenv import load_dotenv
 
@@ -20,8 +21,9 @@ EMBEDDINGS_MODEL = "text-embedding-ada-002"
 EMBEDDINGS_CACHE_PATH = "data/embeddings.dbm"
 
 
-os.makedirs(os.path.dirname(EMBEDDINGS_CACHE_PATH), exist_ok=True)
-embeddings_cache = dbm.open(EMBEDDINGS_CACHE_PATH, "c")
+def get_embeddings_cache() -> MutableMapping:
+    os.makedirs(os.path.dirname(EMBEDDINGS_CACHE_PATH), exist_ok=True)
+    return db.open(EMBEDDINGS_CACHE_PATH, "c")
 
 
 openai_client = openai.AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -41,11 +43,12 @@ async def get_embeddings(inputs: list[str], cache=True) -> list[list[float]]:
     # sanitize whitespace
     inputs = [input.replace("\n", " ").strip() for input in inputs]
 
-    uncached: list[str] = []
+    uncached: list[int] = []
     embeddings: list[list[float]] = [[]] * len(inputs)
     input_hashes: list[str] | None = None
 
     if cache:
+        embeddings_cache = get_embeddings_cache()
         input_hashes = [hash_input(input) for input in inputs]
         for i in range(len(inputs)):
             input = inputs[i]
@@ -54,22 +57,25 @@ async def get_embeddings(inputs: list[str], cache=True) -> list[list[float]]:
                 embedding = json.loads(embeddings_cache[input_hash])
                 embeddings[i] = embedding
             else:
-                uncached.append(input)
+                uncached.append(i)
     else:
-        uncached = inputs
+        uncached = list(range(len(inputs)))
 
     if len(uncached) > 0:
         response = await openai_client.embeddings.create(
-            input=uncached,
+            input=[inputs[i] for i in uncached],
             model=EMBEDDINGS_MODEL,
         )
 
         for i in range(len(uncached)):
-            embedding = response.data[i].embedding
-            embeddings[i] = embedding
-            if cache:
-                assert input_hashes is not None
-                embeddings_cache[input_hashes[i]] = json.dumps(embedding)
+            embeddings[uncached[i]] = response.data[i].embedding
+
+        if cache:
+            assert input_hashes is not None
+            embeddings_cache = get_embeddings_cache()
+            for i in range(len(embeddings)):
+                input_hash = input_hashes[i]
+                embeddings_cache[input_hash] = json.dumps(embeddings[i])
 
     return embeddings
 
@@ -88,6 +94,11 @@ async def search_embeddings(query: str, embeddings: list[list[float]]) -> list[i
 
 
 async def resume_embeddings(resume: Resume):
+    assert len(resume.work) < 20
+    assert len(resume.projects) < 20
+    assert len(resume.education) < 10
+    assert len(resume.awards) < 10
+
     work_embeddings = await get_embeddings(
         [
             f"{work.position} at {work.company}.\n{' '.join(work.highlights)}"

@@ -2,14 +2,15 @@
 
 pkgs.mkShell {
 	buildInputs = with pkgs; [
-		python3
-		python3Packages.black
+		python310
+		python310Packages.black
 		pyright
+		nodePackages.prettier
 	];
 
 	shellHook = ''
 		# Reset PYTHONPATH to avoid conflicts with nixpkgs' python.
-		# unset PYTHONPATH
+		unset PYTHONPATH
 
 		python3 -m venv .venv
 		source .venv/bin/activate

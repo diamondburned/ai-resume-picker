@@ -1,3 +1,4 @@
+import httpx
 from pydantic import BaseModel
 
 
@@ -59,3 +60,12 @@ class Resume(BaseModel):
     projects: list[Project]
     awards: list[Award]
     sections: list[str]
+
+
+async def generate_pdf(resume: Resume) -> bytes:
+    async with httpx.AsyncClient() as client:
+        response = await client.post(
+            "https://resumake.io/api/generate/resume",
+            json=resume.dict(),
+        )
+        return response.content
