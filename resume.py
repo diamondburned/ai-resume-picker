@@ -3,63 +3,63 @@ from pydantic import BaseModel
 
 
 class Location(BaseModel):
-    address: str
+    address: str | None = None
 
 
 class Basics(BaseModel):
-    email: str
-    name: str
-    website: str
-    phone: str
-    location: Location
+    email: str | None = None
+    name: str | None = None
+    website: str | None = None
+    phone: str | None = None
+    location: Location | None = None
 
 
 class Education(BaseModel):
-    institution: str
-    location: str
-    studyType: str
-    area: str
-    startDate: str
-    endDate: str
+    institution: str | None = None
+    location: str | None = None
+    studyType: str | None = None
+    area: str | None = None
+    startDate: str | None = None
+    endDate: str | None = None
 
 
 class Experience(BaseModel):
-    highlights: list[str]
-    company: str
-    position: str
-    location: str
-    startDate: str
-    endDate: str
+    highlights: list[str] | None = None
+    company: str | None = None
+    position: str | None = None
+    location: str | None = None
+    startDate: str | None = None
+    endDate: str | None = None
 
 
 class Skill(BaseModel):
     level: str | None = None
-    keywords: list[str]
-    name: str
+    keywords: list[str] | None = None
+    name: str | None = None
 
 
 class Project(BaseModel):
-    description: str
-    keywords: list[str]
-    name: str
-    url: str
+    description: str | None = None
+    keywords: list[str] | None = None
+    name: str | None = None
+    url: str | None = None
 
 
 class Award(BaseModel):
-    summary: str
-    title: str
-    date: str
+    summary: str | None = None
+    title: str | None = None
+    date: str | None = None
 
 
 class Resume(BaseModel):
-    selectedTemplate: int
-    basics: Basics
-    education: list[Education]
-    work: list[Experience]
-    skills: list[Skill]
-    projects: list[Project]
-    awards: list[Award]
-    sections: list[str]
+    selectedTemplate: int = 0
+    basics: Basics = Basics()
+    education: list[Education] = []
+    work: list[Experience] = []
+    skills: list[Skill] = []
+    projects: list[Project] = []
+    awards: list[Award] = []
+    sections: list[str] = []
 
 
 async def generate_pdf(resume: Resume) -> bytes:
