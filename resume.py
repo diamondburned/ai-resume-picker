@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 import httpx
 from pydantic import BaseModel
 
@@ -64,8 +65,11 @@ class Resume(BaseModel):
 
 async def generate_pdf(resume: Resume) -> bytes:
     async with httpx.AsyncClient() as client:
+        print(resume.dict())
         response = await client.post(
             "https://resumake.io/api/generate/resume",
             json=resume.dict(),
         )
+        if response.status_code != 200:
+            raise HTTPException(response.status_code, response.text)
         return response.content
