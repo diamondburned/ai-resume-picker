@@ -6,6 +6,7 @@ pkgs.mkShell {
 		python310Packages.black
 		pyright
 		nodePackages.prettier
+		deno
 	];
 
 	shellHook = ''

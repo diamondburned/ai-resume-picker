@@ -2,22 +2,114 @@
 <meta charset="utf-8" />
 <title>AI Resume Picker</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="darkreader-lock" />
+
 <link
   rel="stylesheet"
   href="https://necolas.github.io/normalize.css/8.0.1/normalize.css"
 />
 <link
   rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/sakura.css@1.5.0/css/sakura-dark.css"
+  href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css"
 />
 <link
   rel="stylesheet"
-  href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+  href="https://fonts.googleapis.com/css?family=Lato:300,400,500,700&display=swap"
+/>
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,700&display=swap"
 />
 <link rel="stylesheet" href="style.css" />
 
-<main>
-  <h1>AI Resume Picker</h1>
-</main>
+<body>
+  <main>
+    <h1>AI Resume Picker</h1>
+    <form id="resume" onsubmit="handleGenerate(event)">
+      <legend>
+        Upload a
+        <a href="https://resumake.io" target="_blank">Resumake.io</a>
+        resume:
+      </legend>
+      <input
+        type="file"
+        id="file"
+        name="file"
+        accept=".json"
+        placeholder="Resume JSON"
+      />
+
+      <legend>Enter the search query:</legend>
+      <input
+        type="text"
+        id="query"
+        name="query"
+        value="Top work experiences for applying to Google"
+        placeholder="AI Query"
+      />
+
+      <legend>What do you want sorted?</legend>
+      <fieldset id="form-sort">
+        <input
+          type="checkbox"
+          id="sort-work"
+          name="work"
+          role="switch"
+          checked
+        />
+        <label for="sort-work">Work</label>
+        <input type="number" name="work-limit" value="2" min="-1" />
+
+        <input
+          type="checkbox"
+          id="sort-education"
+          name="education"
+          role="switch"
+          checked
+        />
+        <label for="sort-education">Education</label>
+        <input type="number" name="education-limit" value="2" min="-1" />
+
+        <input
+          type="checkbox"
+          id="sort-skills"
+          name="skills"
+          role="switch"
+          checked
+        />
+        <label for="sort-skills">Skills</label>
+        <div></div>
+
+        <input
+          type="checkbox"
+          id="sort-projects"
+          name="projects"
+          role="switch"
+          checked
+        />
+        <label for="sort-projects">Projects</label>
+        <input type="number" name="projects-limit" value="2" min="-1" />
+
+        <input
+          type="checkbox"
+          id="sort-awards"
+          name="awards"
+          role="switch"
+          checked
+        />
+        <label for="sort-awards">Awards</label>
+        <input type="number" name="awards-limit" value="2" min="-1" />
+      </fieldset>
+
+      <div id="generate-box">
+        <button id="generate-button" type="submit">Generate!</button>
+      </div>
+    </form>
+  </main>
+
+  <aside id="pdf-preview">
+    <span>PDF will appear here!</span>
+  </aside>
+</body>
 
 <script src="script.js" type="module"></script>

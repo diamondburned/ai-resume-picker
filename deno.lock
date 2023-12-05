@@ -1,0 +1,11 @@
+{
+  "version": "3",
+  "redirects": {
+    "https://esm.run/pdfobject@2.2.12": "https://cdn.jsdelivr.net/npm/pdfobject@2.2.12/+esm"
+  },
+  "remote": {
+    "https://cdn.jsdelivr.net/npm/path2d-polyfill@2.0.1/+esm": "79c486179eeaaf1c7e370f36e9aa9d5ee35540c74d602c025ff8c9e26c002383",
+    "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.0.269/+esm": "956ced014d2ae8e2ccc14a1b8c72ae5a8f930d8cb5bdbaa79d6d6c5c9549ed34",
+    "https://cdn.jsdelivr.net/npm/pdfobject@2.2.12/+esm": "33e424dab2ec1a293660884b8ec07b4df20058aa5b4b8413d762253998c37346"
+  }
+}
