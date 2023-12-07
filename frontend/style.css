@@ -1,5 +1,5 @@
 :root {
-  --font-family: Poppins, sans-serif;
+  --font-family: Lexend, sans-serif;
 }
 
 * {
@@ -119,6 +119,7 @@ form fieldset input[type="number"] {
 
 #query {
   font-size: 0.95em;
+  margin-top: var(--form-element-spacing-vertical);
 }
 
 #form-sort {
